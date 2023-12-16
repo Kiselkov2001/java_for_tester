@@ -1,12 +1,17 @@
 package ru.kis.geometry.figures;
 
-public class Square {
-    public static void printSquareArea(double a) {
-        String text = String.format("площадь квадрата со стороной %.2f = %.2f", a, squareArea(a));
+public record Square(double side) {
+
+    public void printSquareArea() {
+        String text = String.format("площадь квадрата со стороной %.2f = %.2f", this.side, area());
         System.out.println(text);
     }
 
-    private static double squareArea(double a) {
-        return a * a;
+    public double area() {
+        return this.side * this.side;
+    }
+
+    public double perimeter() {
+        return this.side * 4;
     }
 }
