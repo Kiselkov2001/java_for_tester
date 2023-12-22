@@ -11,7 +11,7 @@ public class TriangleTests {
             new Triangle(-1.0, 4.0, 5.0);
             Assertions.fail();
         } catch(IllegalArgumentException e){
-            Assertions.assertTrue(e.getMessage() == "one or more triangle side lengths < 0");
+            Assertions.assertTrue(e.getMessage().equals("one or more triangle side lengths < 0"));
         }
     }
 
@@ -21,8 +21,15 @@ public class TriangleTests {
             new Triangle(1.0, 4.0, 5.0);
             Assertions.fail();
         } catch(IllegalArgumentException e){
-            Assertions.assertTrue(e.getMessage() == "triangle side lengths are non-consistent");
+            Assertions.assertTrue(e.getMessage().equals("triangle side lengths are non-consistent"));
         }
+    }
+
+    @Test
+    void testEquality() {
+        var t1 = new Triangle(3.0, 4.0, 5.0);
+        var t2 = new Triangle(4.0, 5.0, 3.0);
+        Assertions.assertEquals(t1, t2);
     }
 
     @Test
