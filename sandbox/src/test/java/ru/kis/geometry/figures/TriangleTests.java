@@ -33,6 +33,16 @@ public class TriangleTests {
     }
 
     @Test
+    void testEquality2() {
+        var a = 2;
+        var b = 3;
+        var c = 4;
+        var triangle = new Triangle(a, b, c);
+        var triangle1 = new Triangle(a, c, b);
+        Assertions.assertEquals(triangle, triangle1);
+    }
+
+    @Test
     void canCalculationArea() {
         var t = new Triangle(3.0, 4.0, 5.0);
         var result = t.area();
