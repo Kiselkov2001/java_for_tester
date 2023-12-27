@@ -1,9 +1,6 @@
 package ru.kis.geometry.figures;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public record Triangle(double a, double b, double c) {
 
@@ -21,7 +18,9 @@ public record Triangle(double a, double b, double c) {
         Triangle triangle = (Triangle) o;
         ArrayList<Double> list1 = new ArrayList<>(List.of(a, b, c));
         ArrayList<Double> list2 = new ArrayList<>(List.of(triangle.a, triangle.b, triangle.c));
-        return (list1.containsAll(list2));
+        Collections.sort(list1);
+        Collections.sort(list2);
+        return (list1.equals(list2));
     }
 
     @Override
