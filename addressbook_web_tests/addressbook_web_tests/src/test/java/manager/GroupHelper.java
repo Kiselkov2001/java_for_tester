@@ -18,7 +18,7 @@ public class GroupHelper extends HelperBase {
     public void createGroup(GroupData group) {
         openGroupsPage();
         initGroupCreation();
-        fillGroepForm(group);
+        fillGroupForm(group);
         submitGroupCreation();
         returnToGroupsPage();
     }
@@ -34,12 +34,12 @@ public class GroupHelper extends HelperBase {
         openGroupsPage();
         selectGroup();
         initGroupModification();
-        fillGroepForm(modifiedGroup);
+        fillGroupForm(modifiedGroup);
         submitGroupModification();
         returnToGroupsPage();
     }
 
-    private void fillGroepForm(GroupData group) {
+    private void fillGroupForm(GroupData group) {
         type(By.name("group_name"), group.name());
         type(By.name("group_header"), group.header());
         type(By.name("group_footer"), group.footer());
