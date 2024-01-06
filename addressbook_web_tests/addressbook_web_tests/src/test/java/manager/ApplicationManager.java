@@ -60,4 +60,8 @@ public class ApplicationManager {
         }
     }
 
+    public int countElements(By locater) {
+        return driver.findElements(locater).size();
+    }
+
 }
