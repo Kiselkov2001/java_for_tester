@@ -3,6 +3,9 @@ package manager;
 import model.GroupData;
 import org.openqa.selenium.By;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GroupHelper extends HelperBase {
 
     public GroupHelper(ApplicationManager manager) {
@@ -23,16 +26,32 @@ public class GroupHelper extends HelperBase {
         returnToGroupsPage();
     }
 
-    public void removeGroup() {
+    public void removeGroup1st() {
         openGroupsPage();
         selectGroup1st();
         removeSelectedGroups();
         returnToGroupsPage();
     }
 
-    public void modifyGroup(GroupData modifiedGroup) {
+    public void removeGroup(GroupData group) {
+        openGroupsPage();
+        selectGroup(group);
+        removeSelectedGroups();
+        returnToGroupsPage();
+    }
+
+    public void modifyGroup1st(GroupData modifiedGroup) {
         openGroupsPage();
         selectGroup1st();
+        initGroupModification();
+        fillGroupForm(modifiedGroup);
+        submitGroupModification();
+        returnToGroupsPage();
+    }
+
+    public void modifyGroup(GroupData group, GroupData modifiedGroup) {
+        openGroupsPage();
+        selectGroup(group);
         initGroupModification();
         fillGroupForm(modifiedGroup);
         submitGroupModification();
@@ -77,6 +96,10 @@ public class GroupHelper extends HelperBase {
         click(By.name("selected[]"));
     }
 
+    private void selectGroup(GroupData group) {
+        click(By.cssSelector(String.format("input[value='%s']", group.id())));
+    }
+
     public int getCount() {
         openGroupsPage();
         return manager.countElements(By.name("selected[]"));
@@ -89,7 +112,20 @@ public class GroupHelper extends HelperBase {
     }
 
     private void selectAllGroups() {
+        openGroupsPage();
         var lst = manager.driver.findElements(By.name("selected[]"));
         for (var chk : lst) chk.click();
+    }
+
+    public List<GroupData> getList() {
+        openGroupsPage();
+        var groups = new ArrayList<GroupData>();
+        var lst = manager.driver.findElements(By.cssSelector("span.group"));
+        for (var s : lst) {
+            var name = s.getText();
+            var id = s.findElement(By.name("selected[]")).getAttribute("value");
+            groups.add(new GroupData().withId(id).withName(name));
+        }
+        return groups;
     }
 }

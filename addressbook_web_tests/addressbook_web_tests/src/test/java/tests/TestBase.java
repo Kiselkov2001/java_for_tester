@@ -1,8 +1,10 @@
 package tests;
 
 import manager.ApplicationManager;
+import model.GroupData;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.util.Comparator;
 import java.util.Random;
 
 public class TestBase {
@@ -20,5 +22,4 @@ public class TestBase {
         for (int i = 0; i < n; i++) result += (char)('a' + rnd.nextInt(26));
         return result;
     }
-
 }

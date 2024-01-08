@@ -29,18 +29,26 @@ public class ContactCreationTests extends TestBase {
     }
 
     public static List<ContactData> negativeContactProvider() {
-        var lst = new ArrayList<>(List.of(
+        return new ArrayList<>(List.of(
                 new ContactData(new String[]{"firstname:contact_name'", "", ""})));
-        return lst;
     }
 
     @ParameterizedTest
     @MethodSource("contactProvider")
     public void canCreateMultipleContacts(ContactData contact) {
-        int prvCount = app.contacts().getCount();
+        var prvList = app.contacts().getList();
         app.contacts().createContact(contact);
-        int newCount = app.contacts().getCount();
-        Assertions.assertEquals(prvCount + 1, newCount);
+        var newList = app.contacts().getList();
+        Assertions.assertEquals(prvList.size() + 1, newList.size());
+        prvList.add(new ContactData(contact.getTuple()));
+
+        prvList.sort(ContactData::compare);
+        newList.sort(ContactData::compare);
+
+        var arr1 = prvList.stream().map(ContactData::repr).toArray(String[]::new);
+        var arr2 = newList.stream().map(ContactData::repr).toArray(String[]::new);
+
+        Assertions.assertArrayEquals(arr1, arr2);
     }
 
     @ParameterizedTest

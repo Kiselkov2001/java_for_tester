@@ -51,6 +51,10 @@ public class ContactData {
         }
     }
 
+    public String getProperty(String key) {
+        return dicBase.get(key);
+    }
+
     public String[][] getEntryDictonary() {
         String[][] arr = new String[dicBase.size()][2];
         int i = 0;
@@ -62,5 +66,26 @@ public class ContactData {
         return arr;
     }
 
+    public static int compare(ContactData o1, ContactData o2) {
+        var rez = o1.getProperty("lastname").compareTo(o2.getProperty("lastname"));
+        if (rez == 0)
+            return o1.getProperty("firstname").compareTo(o2.getProperty("firstname"));
+        return rez;
+    }
+
+    public String[] getTuple() {
+        return getTuple(getProperty("lastname"), getProperty("firstname"));
+    }
+
+    public static String[] getTuple(String lastname, String firstname) {
+        return new String[]{
+                String.format("lastname:%s", lastname),
+                String.format("firstname:%s", firstname)};
+    }
+
+    public String repr() {
+        var t = getTuple();
+        return String.format("%s, %s", t[0], t[1]);
+    }
 }
 
