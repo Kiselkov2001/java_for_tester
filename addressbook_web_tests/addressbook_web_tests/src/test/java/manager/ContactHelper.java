@@ -1,7 +1,6 @@
 package manager;
 
 import model.ContactData;
-import model.GroupData;
 import org.openqa.selenium.By;
 
 import java.util.ArrayList;
@@ -25,14 +24,22 @@ public class ContactHelper extends HelperBase {
         returnToHomePage();
     }
 
-    public void removeContact1st() {
-        selectContact1st();
-        removeSelectedContacts();
-    }
-
     public void removeContact(int index) {
         selectContact(index);
         removeSelectedContacts();
+    }
+
+    public void modifyContact(int index, ContactData contact) {
+        clickButtonEdit(index);
+        fillContactForm(contact);
+        submitContactModify();
+        returnToHomePage();
+    }
+
+    private void clickButtonEdit(int index) {
+        var tr = manager.driver.findElements(By.cssSelector("#maintable tr[name='entry']")).get(index);
+        var btn = tr.findElement(By.cssSelector("img[title='Edit']"));
+        btn.click();
     }
 
     public boolean isContactPresent() {
@@ -64,11 +71,15 @@ public class ContactHelper extends HelperBase {
         click(By.xpath("(//input[@name=\'submit\'])[2]"));
     }
 
+    private void submitContactModify() {
+        click(By.cssSelector("input[name='update']"));
+    }
+
     private void fillContactForm(ContactData contact) {
         String[][] arr = contact.getEntryDictonary();
 
         for (String[] a : arr) {
-            if (a[1] != "" && a[1] != null)
+            if (!a[1].isEmpty())
                 type(By.name(a[0]), a[1]);
         }
     }
