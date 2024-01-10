@@ -12,25 +12,35 @@ import java.util.Random;
 public class ContactCreationTests extends TestBase {
     public static List<ContactData> contactProvider() {
         var lst = new ArrayList<>(List.of(
-                new ContactData(new String[]{"firstname:contact_name1", "lastname:1", "address:2", "email:3", "home:4"})));
-        for (var firstname : List.of("firstname:", "firstname:firstname"))
-            for (var address : List.of("address:", "address:address"))
-                for (var lastname : List.of("lastname", "lastname:lastname"))
-                    lst.add(new ContactData(new String[]{firstname, address, lastname}));
-        var arr = new String[ContactData.fld.length];
+                new ContactData()
+                        .withFirstName("contact_name1")
+                        .withLastName("1")
+                        .withAddress("2")
+                        .withEmail("3")
+                        .withHome("4")));
+        for (var firstname : List.of("", "firstname"))
+            for (var address : List.of("", "address"))
+                for (var lastname : List.of("", "lastname"))
+                    lst.add(new ContactData()
+                            .withFirstName(firstname)
+                            .withLastName(lastname)
+                            .withAddress(address));
+
         var rnd = new Random();
         for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < ContactData.fld.length; j++)
-                arr[j] = ContactData.fld[j] + ":" + randomString(rnd.nextInt(21));
-
-            lst.add(new ContactData(arr));
+            lst.add(new ContactData()
+                    .withFirstName(randomString(rnd.nextInt(21)))
+                    .withLastName(randomString(rnd.nextInt(21)))
+                    .withAddress(randomString(rnd.nextInt(21)))
+                    .withEmail(randomString(rnd.nextInt(21)))
+                    .withHome(randomString(rnd.nextInt(21))));
         }
         return lst;
     }
 
     public static List<ContactData> negativeContactProvider() {
         return new ArrayList<>(List.of(
-                new ContactData(new String[]{"firstname:contact_name'", "", ""})));
+                new ContactData().withLastName("contact_name'")));
     }
 
     @ParameterizedTest
@@ -40,15 +50,17 @@ public class ContactCreationTests extends TestBase {
         app.contacts().createContact(contact);
         var newList = app.contacts().getList();
         Assertions.assertEquals(prvList.size() + 1, newList.size());
-        prvList.add(new ContactData(contact.getTuple()));
 
-        prvList.sort(ContactData::compare);
-        newList.sort(ContactData::compare);
+        newList.sort(ContactData::compareById);
+        prvList.sort(ContactData::compareById);
 
-        var arr1 = prvList.stream().map(ContactData::repr).toArray(String[]::new);
-        var arr2 = newList.stream().map(ContactData::repr).toArray(String[]::new);
+        prvList.add(contact.withId(newList.get(newList.size() - 1).id()));
+        Assertions.assertEquals(prvList, newList);
 
-        Assertions.assertArrayEquals(arr1, arr2);
+//        var arr1 = prvList.stream().map(ContactData::repr).toArray(String[]::new);
+//        var arr2 = newList.stream().map(ContactData::repr).toArray(String[]::new);
+
+//        Assertions.assertArrayEquals(arr1, arr2);
     }
 
     @ParameterizedTest

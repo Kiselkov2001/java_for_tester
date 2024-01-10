@@ -1,10 +1,8 @@
 package model;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class ContactData {
+public record ContactData(String id, String firstname, String lastname, String address, String home, String email) {
     public static String[] fld = new String[]{
+            "id",
             "firstname",
             "middlename",
             "lastname",
@@ -15,77 +13,35 @@ public class ContactData {
             "home",
             "email"};
 
-    HashMap<String, String> dicBase = initDictonary("", false);
-
     public ContactData() {
-        clearDictonary(dicBase);
+        this("", "", "", "", "", "");
     }
 
-    public ContactData(String[] arr) {
-        clearDictonary(dicBase);
-        for (int i = 0; i < arr.length; i++) {
-            var x = arr[i].split(":");
-            if (x.length != 2) continue;
-            if (!dicBase.containsKey(x[0])) continue;
-            dicBase.put((String) x[0], x[1]);
-        }
+    public ContactData withId(String id) {
+        return new ContactData(id, this.firstname, this.lastname, this.address, this.home, this.email);
     }
 
-    public ContactData(HashMap<String, String> dic) {
-        for (Map.Entry entry : dic.entrySet()) {
-            if (!this.dicBase.containsKey(entry.getKey())) continue;
-            this.dicBase.put((String) entry.getKey(), (String) entry.getValue());
-        }
+    public ContactData withFirstName(String firstname) {
+        return new ContactData(this.id, firstname, this.lastname, this.address, this.home, this.email);
     }
 
-    public static HashMap<String, String> initDictonary(String sfx, boolean forceClear) {
-        HashMap<String, String> map = new HashMap<>();
-        for (String s : fld)
-            map.put(s, String.format(forceClear ? s : "", sfx));
-        return map;
+    public ContactData withLastName(String lastname) {
+        return new ContactData(this.id, this.firstname, lastname, this.address, this.home, this.email);
     }
 
-    public static void clearDictonary(HashMap<String, String> dic) {
-        for (Map.Entry entry : dic.entrySet()) {
-            dic.put((String) entry.getKey(), "");
-        }
+    public ContactData withAddress(String address) {
+        return new ContactData(this.id, this.firstname, this.lastname, address, this.home, this.email);
     }
 
-    public String getProperty(String key) {
-        return dicBase.get(key);
+    public ContactData withHome(String home) {
+        return new ContactData(this.id, this.firstname, this.lastname, this.address, home, this.email);
     }
 
-    public String[][] getEntryDictonary() {
-        String[][] arr = new String[dicBase.size()][2];
-        int i = 0;
-        for (Map.Entry entry : dicBase.entrySet()) {
-            arr[i][0] = (String) entry.getKey();
-            arr[i][1] = (String) entry.getValue();
-            i++;
-        }
-        return arr;
+    public ContactData withEmail(String email) {
+        return new ContactData(this.id, this.firstname, this.lastname, this.address, this.home, email);
     }
 
-    public static int compare(ContactData o1, ContactData o2) {
-        var rez = o1.getProperty("lastname").compareTo(o2.getProperty("lastname"));
-        if (rez == 0)
-            return o1.getProperty("firstname").compareTo(o2.getProperty("firstname"));
-        return rez;
-    }
-
-    public String[] getTuple() {
-        return getTuple(getProperty("lastname"), getProperty("firstname"));
-    }
-
-    public static String[] getTuple(String lastname, String firstname) {
-        return new String[]{
-                String.format("lastname:%s", lastname),
-                String.format("firstname:%s", firstname)};
-    }
-
-    public String repr() {
-        var t = getTuple();
-        return String.format("%s, %s", t[0], t[1]);
+    public static int compareById(ContactData o1, ContactData o2) {
+        return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
     }
 }
-

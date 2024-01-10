@@ -46,10 +46,6 @@ public class ContactHelper extends HelperBase {
         return isElementPresent(By.name("selected[]"));
     }
 
-    private void selectContact1st() {
-        click(By.name("selected[]"));
-    }
-
     private void selectContact(int index) {
         manager.driver.findElements(By.name("selected[]")).get(index).click();
     }
@@ -76,7 +72,14 @@ public class ContactHelper extends HelperBase {
     }
 
     private void fillContactForm(ContactData contact) {
-        String[][] arr = contact.getEntryDictonary();
+
+        String[][] arr = new String[][]{
+                new String[]{"lastname", contact.lastname()},
+                new String[]{"firstname", contact.firstname()},
+                new String[]{"address", contact.address()},
+                new String[]{"email", contact.email()},
+                new String[]{"home", contact.home()},
+        };
 
         for (String[] a : arr) {
             if (!a[1].isEmpty())
@@ -103,9 +106,19 @@ public class ContactHelper extends HelperBase {
         var cnt = new ArrayList<ContactData>();
         var lst = manager.driver.findElements(By.cssSelector("#maintable tr[name='entry']"));
         for (var s : lst) {
+            var id = s.findElement(By.xpath("./td[1]/input")).getAttribute("value");
             var lastname = s.findElement(By.xpath("./td[2]")).getText();
             var firstname = s.findElement(By.xpath("./td[3]")).getText();
-            cnt.add(new ContactData(ContactData.getTuple(lastname, firstname)));
+            var address = s.findElement(By.xpath("./td[4]")).getText();
+            var email = s.findElement(By.xpath("./td[5]")).getText();
+            var home = s.findElement(By.xpath("./td[6]")).getText();
+            cnt.add(new ContactData()
+                    .withId(id)
+                    .withFirstName(firstname)
+                    .withLastName(lastname)
+                    .withAddress(address)
+                    .withEmail(email)
+                    .withHome(home));
         }
         return cnt;
     }

@@ -10,7 +10,7 @@ public class ContactRemovalTests extends TestBase {
     @Test
     public void canRemoveContact() {
         if (!app.contacts().isContactPresent()) {
-            app.contacts().createContact(new ContactData(ContactData.initDictonary("2", false)));
+            app.contacts().createContact(new ContactData().withLastName("LastName3"));
         }
         var prvList = app.contacts().getList();
         var rnd = new Random();
@@ -22,16 +22,16 @@ public class ContactRemovalTests extends TestBase {
         Assertions.assertEquals(prvList.size() - 1, newList.size());
         prvList.remove(index);
 
-        var arr1 = prvList.stream().map(ContactData::repr).toArray(String[]::new);
-        var arr2 = newList.stream().map(ContactData::repr).toArray(String[]::new);
+        newList.sort(ContactData::compareById);
+        prvList.sort(ContactData::compareById);
 
-        Assertions.assertArrayEquals(arr1, arr2);
+        Assertions.assertEquals(prvList, newList);
     }
 
     @Test
     public void canRemoveAllContacts() {
         if (!app.contacts().isContactPresent()) {
-            app.contacts().createContact(new ContactData(ContactData.initDictonary("2", false)));
+            app.contacts().createContact(new ContactData().withLastName("LastName3"));
         }
         app.contacts().removeAllContacts();
         int newCount = app.contacts().getCount();
