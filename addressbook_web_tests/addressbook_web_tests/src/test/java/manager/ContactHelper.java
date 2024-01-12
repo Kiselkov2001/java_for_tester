@@ -79,11 +79,15 @@ public class ContactHelper extends HelperBase {
                 new String[]{"address", contact.address()},
                 new String[]{"email", contact.email()},
                 new String[]{"home", contact.home()},
+                new String[]{"photo", contact.photo()},
         };
 
         for (String[] a : arr) {
             if (!a[1].isEmpty())
-                type(By.name(a[0]), a[1]);
+                if (a[0] != "photo")
+                    type(By.name(a[0]), a[1]);
+                else
+                    attach(By.name(a[0]), a[1]);
         }
     }
 

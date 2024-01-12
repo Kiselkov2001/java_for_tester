@@ -1,10 +1,17 @@
 package tests;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import common.CommonFunc;
 import model.ContactData;
+import model.GroupData;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,12 +36,22 @@ public class ContactCreationTests extends TestBase {
         var rnd = new Random();
         for (int i = 0; i < 5; i++) {
             lst.add(new ContactData()
-                    .withFirstName(randomString(rnd.nextInt(21)))
-                    .withLastName(randomString(rnd.nextInt(21)))
-                    .withAddress(randomString(rnd.nextInt(21)))
-                    .withEmail(randomString(rnd.nextInt(21)))
-                    .withHome(randomString(rnd.nextInt(21))));
+                    .withFirstName(CommonFunc.randomString(rnd.nextInt(21)))
+                    .withLastName(CommonFunc.randomString(rnd.nextInt(21)))
+                    .withAddress(CommonFunc.randomString(rnd.nextInt(21)))
+                    .withEmail(CommonFunc.randomString(rnd.nextInt(21)))
+                    .withHome(CommonFunc.randomString(rnd.nextInt(21))));
         }
+        return lst;
+    }
+
+    public static List<ContactData> contactProviderJSON() throws IOException {
+        var lst = new ArrayList<ContactData>();
+        ObjectMapper mapper = new ObjectMapper();
+        var value = mapper.readValue(new File("contacts.json"),
+                new TypeReference<List<ContactData>>() {
+                });
+        lst.addAll(value);
         return lst;
     }
 
@@ -44,7 +61,7 @@ public class ContactCreationTests extends TestBase {
     }
 
     @ParameterizedTest
-    @MethodSource("contactProvider")
+    @MethodSource("contactProviderJSON")
     public void canCreateMultipleContacts(ContactData contact) {
         var prvList = app.contacts().getList();
         app.contacts().createContact(contact);
@@ -56,11 +73,6 @@ public class ContactCreationTests extends TestBase {
 
         prvList.add(contact.withId(newList.get(newList.size() - 1).id()));
         Assertions.assertEquals(prvList, newList);
-
-//        var arr1 = prvList.stream().map(ContactData::repr).toArray(String[]::new);
-//        var arr2 = newList.stream().map(ContactData::repr).toArray(String[]::new);
-
-//        Assertions.assertArrayEquals(arr1, arr2);
     }
 
     @ParameterizedTest
@@ -70,6 +82,15 @@ public class ContactCreationTests extends TestBase {
         app.contacts().createContact(contact);
         int newCount = app.contacts().getCount();
         Assertions.assertEquals(prvCount, newCount);
+    }
+
+    @Test
+    public void canCreateContact() {
+        var contact = new ContactData()
+                .withLastName(CommonFunc.randomString(10))
+                .withFirstName(CommonFunc.randomString(10))
+                .withPhoto(CommonFunc.randomFile("src/test/resources/images"));
+        app.contacts().createContact(contact);
     }
 
 }

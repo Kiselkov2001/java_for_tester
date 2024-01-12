@@ -2,13 +2,19 @@ import java.io.File;
 
 public class Hello {
     public static void main(String[] args) {
-        var z = calculate();
-        System.out.println(z);
-        System.out.println("hello, world");
+        pathFile();
 
-//        var configFile = new File("build.gradle");
-//        System.out.println(configFile.getAbsolutePath());
-//        System.out.println(configFile.exists());
+//        var z = calculate();
+//        System.out.println(z);
+//        System.out.println("hello, world");
+    }
+
+    public static void pathFile() {
+        var configFile = new File("build.gradle");
+        System.out.println(configFile.getAbsolutePath());
+        System.out.println(configFile.exists());
+
+        System.out.println(String.format("working directory: %s", new File("").getAbsolutePath()));
     }
 
     private static int calculate() {
