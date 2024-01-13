@@ -2,6 +2,7 @@ package tests;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import common.CommonFunc;
 import model.ContactData;
 import model.GroupData;
@@ -48,6 +49,7 @@ public class ContactCreationTests extends TestBase {
     public static List<ContactData> contactProviderJSON() throws IOException {
         var lst = new ArrayList<ContactData>();
         ObjectMapper mapper = new ObjectMapper();
+        //ObjectMapper mapper = new XmlMapper(); //contacts.xml
         var value = mapper.readValue(new File("contacts.json"),
                 new TypeReference<List<ContactData>>() {
                 });
