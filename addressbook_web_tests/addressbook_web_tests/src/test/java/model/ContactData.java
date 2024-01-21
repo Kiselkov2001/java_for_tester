@@ -49,4 +49,8 @@ public record ContactData(String id, String firstname, String lastname, String p
     public static int compareById(ContactData o1, ContactData o2) {
         return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
     }
+
+    public String repr() {
+        return String.format("%s %s %s", id, lastname, firstname);
+    }
 }

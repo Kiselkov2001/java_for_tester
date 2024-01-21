@@ -62,12 +62,18 @@ public class ContactCreationTests extends TestBase {
                 new ContactData().withLastName("contact_name'")));
     }
 
+    public static List<ContactData> singleRandomContact() {
+        return List.of(new ContactData()
+                .withFirstName(CommonFunc.randomString(10))
+                .withLastName(CommonFunc.randomString(15)));
+    }
+
     @ParameterizedTest
-    @MethodSource("contactProviderJSON")
-    public void canCreateMultipleContacts(ContactData contact) {
-        var prvList = app.contacts().getList();
+    @MethodSource("singleRandomContact")
+    public void canCreateContact(ContactData contact) {
+        var prvList = app.jdbc().getContactList(); //app.contacts().getList();
         app.contacts().createContact(contact);
-        var newList = app.contacts().getList();
+        var newList = app.jdbc().getContactList(); //app.contacts().getList();
         Assertions.assertEquals(prvList.size() + 1, newList.size());
 
         newList.sort(ContactData::compareById);

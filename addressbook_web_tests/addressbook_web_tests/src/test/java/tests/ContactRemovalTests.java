@@ -12,13 +12,13 @@ public class ContactRemovalTests extends TestBase {
         if (!app.contacts().isContactPresent()) {
             app.contacts().createContact(new ContactData().withLastName("LastName3"));
         }
-        var prvList = app.contacts().getList();
+        var prvList = app.jdbc().getContactList(); //app.contacts().getList();
         var rnd = new Random();
         int index = rnd.nextInt(prvList.size());
 
         app.contacts().removeContact(index);
 
-        var newList = app.contacts().getList();
+        var newList = app.jdbc().getContactList(); //app.contacts().getList();
         Assertions.assertEquals(prvList.size() - 1, newList.size());
         prvList.remove(index);
 

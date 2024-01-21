@@ -21,4 +21,12 @@ public class TestBase {
         }
     }
 
+    public void sleep(int msec){
+        try {
+            Thread.sleep(msec);
+        } catch (InterruptedException ie) {
+            //Thread.currentThread().interrupt();
+        }
+    }
+
 }

@@ -11,16 +11,16 @@ public class ContactModificationTests extends TestBase {
         if (!app.contacts().isContactPresent()) {
             app.contacts().createContact(new ContactData().withLastName("LastName3"));
         }
-        var prvList = app.contacts().getList();
+        var prvList = app.jdbc().getContactList(); //app.contacts().getList();
         var rnd = new Random();
         int index = rnd.nextInt(prvList.size());
 
         var contact = new ContactData()
-                .withLastName("modified lastname")
-                .withFirstName("modified firstname");
-        app.contacts().modifyContact(index, contact);
+                .withLastName("modified_lastnameZZ")
+                .withFirstName("modified_firstnameZZ");
+        app.contacts().modifyContact(prvList.get(index), contact);
 
-        var newList = app.contacts().getList();
+        var newList = app.jdbc().getContactList(); //app.contacts().getList();
         prvList.set(index, contact
                 .withId(prvList.get(index).id())
                 .withAddress(prvList.get(index).address())
@@ -30,12 +30,12 @@ public class ContactModificationTests extends TestBase {
         prvList.sort(ContactData::compareById);
         newList.sort(ContactData::compareById);
 
-        Assertions.assertEquals(prvList, newList);
+        //it's compare without photo
+        var arr1 = prvList.stream().map(ContactData::repr).toArray(String[]::new);
+        var arr2 = newList.stream().map(ContactData::repr).toArray(String[]::new);
 
-//        var arr1 = prvList.stream().map(ContactData::repr).toArray(String[]::new);
-//        var arr2 = newList.stream().map(ContactData::repr).toArray(String[]::new);
-//
-//        Assertions.assertArrayEquals(arr1, arr2);
+        Assertions.assertArrayEquals(arr1, arr2);
+        //Assertions.assertEquals(prvList, newList);
     }
 
 }

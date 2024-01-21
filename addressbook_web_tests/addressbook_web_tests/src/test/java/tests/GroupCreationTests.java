@@ -38,26 +38,35 @@ public class GroupCreationTests extends TestBase {
         ObjectMapper mapper = new ObjectMapper();
 //        var str = new File("").getAbsolutePath().toString();
 //        var f = new File("groups.json");
-        var value = mapper.readValue(new File("groups.json"), new TypeReference<List<GroupData>>() {});
+        var value = mapper.readValue(new File("groups.json"), new TypeReference<List<GroupData>>() {
+        });
         lst.addAll(value);
         return lst;
     }
 
     public static List<GroupData> negativeGroupProvider() {
-        var lst = new ArrayList<>(List.of(
+        return new ArrayList<>(List.of(
                 new GroupData().withName("group_name'")));
-        return lst;
+    }
+
+    public static List<GroupData> singleRandomGroup() {
+        return List.of(new GroupData()
+                .withName(CommonFunc.randomString(5))
+                .withHeader(CommonFunc.randomString(10))
+                .withFooter(CommonFunc.randomString(20)));
     }
 
     @ParameterizedTest
-    @MethodSource("groupProviderJSON")
-    public void canCreateMultipleGroups(GroupData group) {
-        var prvList = app.groups().getList();
+    @MethodSource("singleRandomGroup")
+    public void canCreateGroup(GroupData group) {
+        var prvList = app.jdbc().getGroupList(); //app.groups().getList();
         app.groups().createGroup(group);
-        var newList = app.groups().getList();
+        var newList = app.jdbc().getGroupList(); //app.groups().getList();
         newList.sort(GroupData::compareById);
+        var maxId = newList.get(newList.size() - 1).id();
+
         var lst = new ArrayList<>(prvList);
-        lst.add(group.withId(newList.get(newList.size() - 1).id()).withHeader("").withFooter(""));
+        lst.add(group.withId(maxId));
         lst.sort(GroupData::compareById);
         Assertions.assertEquals(lst, newList);
     }

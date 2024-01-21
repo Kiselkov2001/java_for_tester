@@ -29,15 +29,28 @@ public class ContactHelper extends HelperBase {
         removeSelectedContacts();
     }
 
-    public void modifyContact(int index, ContactData contact) {
-        clickButtonEdit(index);
+    public void modifyContactByIndex(int index, ContactData contact) {
+        clickButtonEditByIndex(index);
         fillContactForm(contact);
         submitContactModify();
         returnToHomePage();
     }
 
-    private void clickButtonEdit(int index) {
+    public void modifyContact(ContactData contact, ContactData modifiedContact) {
+        clickButtonEdit(contact);
+        fillContactForm(modifiedContact);
+        submitContactModify();
+        returnToHomePage();
+    }
+
+    private void clickButtonEditByIndex(int index) {
         var tr = manager.driver.findElements(By.cssSelector("#maintable tr[name='entry']")).get(index);
+        var btn = tr.findElement(By.cssSelector("img[title='Edit']"));
+        btn.click();
+    }
+
+    private void clickButtonEdit(ContactData contact) {
+        var tr = manager.driver.findElement(By.cssSelector(String.format("tr:has(input[name='selected[]'][value='%s'])", contact.id())));
         var btn = tr.findElement(By.cssSelector("img[title='Edit']"));
         btn.click();
     }

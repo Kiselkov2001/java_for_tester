@@ -15,11 +15,11 @@ public class GroupRemovalTests extends TestBase {
         if (!app.groups().isGroupPresent()) {
             app.groups().createGroup(new GroupData("", "group name", "group header", "group footer"));
         }
-        var prvList = app.groups().getList();
+        var prvList = app.jdbc().getGroupList(); //app.groups().getList();
         var rnd = new Random();
         int index = rnd.nextInt(prvList.size());
         app.groups().removeGroup(prvList.get(index));
-        var newList = app.groups().getList();
+        var newList = app.jdbc().getGroupList(); //app.groups().getList();
         Assertions.assertEquals(prvList.size() - 1, newList.size());
         var lst = new ArrayList<>(prvList);
         lst.remove(index);
@@ -32,7 +32,7 @@ public class GroupRemovalTests extends TestBase {
             app.groups().createGroup(new GroupData("", "group name", "group header", "group footer"));
         }
         app.groups().removeAllGroups();
-        int newCount = app.groups().getCount();
+        int newCount = app.jdbc().getGroupList().size(); //app.groups().getCount();
         Assertions.assertEquals(0, newCount);
     }
 
