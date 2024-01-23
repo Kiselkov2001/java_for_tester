@@ -1,6 +1,7 @@
 package tests;
 
 import manager.ApplicationManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.FileNotFoundException;
@@ -21,7 +22,12 @@ public class TestBase {
         }
     }
 
-    public void sleep(int msec){
+    @AfterEach
+    public void checkDatabaseConsistency() {
+        app.jdbc().checkConsistency();
+    }
+
+    public void sleep(int msec) {
         try {
             Thread.sleep(msec);
         } catch (InterruptedException ie) {

@@ -1,7 +1,9 @@
 package manager;
 
 import model.ContactData;
+import model.GroupData;
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,26 @@ public class ContactHelper extends HelperBase {
         fillContactForm(contact);
         submitContactCreation();
         returnToHomePage();
+    }
+
+    public void createContact(ContactData contact, GroupData group) {
+        initContactCreation();
+        fillContactForm(contact);
+        selectGroup(group);
+        submitContactCreation();
+        returnToHomePage();
+    }
+
+    private void selectGroup(GroupData group) {
+        new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
+    }
+
+    private void selectGroupFilter(GroupData group) {
+        new Select(manager.driver.findElement(By.name("group"))).selectByValue(group.id());
+    }
+
+    private void selectToGroup(GroupData group) {
+        new Select(manager.driver.findElement(By.name("to_group"))).selectByValue(group.id());
     }
 
     public void removeContact(int index) {
@@ -61,6 +83,10 @@ public class ContactHelper extends HelperBase {
 
     private void selectContact(int index) {
         manager.driver.findElements(By.name("selected[]")).get(index).click();
+    }
+
+    private void selectContact(ContactData contact) {
+        click(By.cssSelector(String.format("input[value='%s']", contact.id())));
     }
 
     private void removeSelectedContacts() {
@@ -138,6 +164,30 @@ public class ContactHelper extends HelperBase {
                     .withHome(home));
         }
         return cnt;
+    }
+
+    public void addContactInGroup(ContactData contact, GroupData group) {
+        returnToHome();
+        selectContact(contact);
+        selectToGroup(group);
+        clickButtomAddTo();
+        returnToHome();
+    }
+
+    public void clickButtomAddTo() {
+        click(By.cssSelector("input[value='Add to']"));
+    }
+
+    public void delContactInGroup(ContactData contact, GroupData group) {
+        returnToHome();
+        selectGroupFilter(group);
+        selectContact(contact);
+        clickButtomRemoveFrom();
+        returnToHome();
+    }
+
+    public void clickButtomRemoveFrom() {
+        click(By.cssSelector("input[name='remove']"));
     }
 
 }

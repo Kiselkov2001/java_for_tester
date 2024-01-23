@@ -12,14 +12,14 @@ public class GroupRemovalTests extends TestBase {
 
     @Test
     public void canRemoveGroup() {
-        if (!app.groups().isGroupPresent()) {
-            app.groups().createGroup(new GroupData("", "group name", "group header", "group footer"));
+        if (app.hbm().getGroupCount() == 0) {
+            app.hbm().createGroup(new GroupData("", "group name", "group header", "group footer"));
         }
-        var prvList = app.jdbc().getGroupList(); //app.groups().getList();
+        var prvList = app.hbm().getGroupList(); //app.groups().getList(); //app.jdbc().getGroupList();
         var rnd = new Random();
         int index = rnd.nextInt(prvList.size());
         app.groups().removeGroup(prvList.get(index));
-        var newList = app.jdbc().getGroupList(); //app.groups().getList();
+        var newList = app.hbm().getGroupList(); //app.groups().getList(); //app.jdbc().getGroupList();
         Assertions.assertEquals(prvList.size() - 1, newList.size());
         var lst = new ArrayList<>(prvList);
         lst.remove(index);
@@ -28,11 +28,11 @@ public class GroupRemovalTests extends TestBase {
 
     @Test
     public void canRemoveAllGroups() {
-        if (!app.groups().isGroupPresent()) {
-            app.groups().createGroup(new GroupData("", "group name", "group header", "group footer"));
+        if (app.hbm().getGroupCount() == 0) {
+            app.hbm().createGroup(new GroupData("", "group name", "group header", "group footer"));
         }
         app.groups().removeAllGroups();
-        int newCount = app.jdbc().getGroupList().size(); //app.groups().getCount();
+        long newCount = app.hbm().getGroupCount(); //app.groups().getCount(); //app.jdbc().getGroupList().size();
         Assertions.assertEquals(0, newCount);
     }
 

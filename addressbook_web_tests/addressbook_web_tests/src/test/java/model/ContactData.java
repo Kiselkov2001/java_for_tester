@@ -51,6 +51,6 @@ public record ContactData(String id, String firstname, String lastname, String p
     }
 
     public String repr() {
-        return String.format("%s %s %s", id, lastname, firstname);
+        return String.format("%s %s %s %s", id, lastname, firstname, address);
     }
 }

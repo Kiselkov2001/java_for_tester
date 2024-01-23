@@ -10,15 +10,15 @@ import java.util.Random;
 public class GroupModificationTests extends TestBase {
     @Test
     public void canModifyGroup() {
-        if (!app.groups().isGroupPresent()) {
-            app.groups().createGroup(new GroupData("", "group name", "group header", "group footer"));
+        if (app.hbm().getGroupCount() == 0) {
+            app.hbm().createGroup(new GroupData("", "group name", "group header", "group footer"));
         }
-        var prvList = app.jdbc().getGroupList(); //app.groups().getList();
+        var prvList = app.hbm().getGroupList(); //app.groups().getList(); //app.jdbc().getGroupList();
         var rnd = new Random();
         int index = rnd.nextInt(prvList.size());
         var group = new GroupData().withName("modified name");
         app.groups().modifyGroup(prvList.get(index), group);
-        var newList = app.jdbc().getGroupList(); //app.groups().getList();
+        var newList = app.hbm().getGroupList(); //app.groups().getList(); //app.jdbc().getGroupList();
         var lst = new ArrayList<>(prvList);
         lst.set(index, group.withId(lst.get(index).id()));
         lst.sort(GroupData::compareById);
