@@ -5,6 +5,9 @@ import model.ContactData;
 import model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class ContactModificationTests extends TestBase {
@@ -42,38 +45,67 @@ public class ContactModificationTests extends TestBase {
 
     @Test
     public void canAddContactInGroup() {
-        if (app.hbm().getGroupCount() == 0) {
-            app.hbm().createGroup(new GroupData("", "group name", "group header", "group footer"));
-        }
-        var group = app.hbm().getGroupList().get(0);
+        ContactData contact;
+        GroupData group;
 
-        if (app.hbm().getContactCount() == 0) {
-            app.hbm().createContact(new ContactData("", "lastname", "firstname", "", "", "", ""));
+        var lstCouple = seekCoupleGroupAndContactWithoutLink();
+
+        if (lstCouple.isEmpty()) {
+            contact = new ContactData()
+                    .withLastName(CommonFunc.randomString(10))
+                    .withFirstName(CommonFunc.randomString(15))
+                    .withAddress(CommonFunc.randomString(20));
+
+            app.contacts().createContact(contact);
+
+            group = new GroupData()
+                    .withName(CommonFunc.randomString(10))
+                    .withHeader(CommonFunc.randomString(15))
+                    .withFooter(CommonFunc.randomString(20));
+
+            app.groups().createGroup(group);
+
+            lstCouple = seekCoupleGroupAndContactWithoutLink();
         }
-        var lst = app.hbm().getContactList();
-        var rnd = new Random();
-        int index = rnd.nextInt(lst.size());
-        var contact = lst.get(index);
+
+        group = (GroupData) lstCouple.get(0);
+        contact = (ContactData) lstCouple.get(1);
 
         var oldRelated = app.hbm().getContactsInGroup(group);
-        int off = oldRelated.contains(contact) ? 0 : 1;
-
         app.contacts().addContactInGroup(contact, group);
         var newRelated = app.hbm().getContactsInGroup(group);
 
-        Assertions.assertEquals(oldRelated.size() + off, newRelated.size());
+        Assertions.assertEquals(oldRelated.size() + 1, newRelated.size());
 
-        if (off > 0)
-            oldRelated.add(contact
-                    .withId(contact.id())
-                    .withLastName(contact.lastname())
-                    .withFirstName(contact.firstname())
-                    .withAddress(contact.address()));
+        oldRelated.add(contact
+                .withId(contact.id())
+                .withLastName(contact.lastname())
+                .withFirstName(contact.firstname())
+                .withAddress(contact.address()));
 
         oldRelated.sort(ContactData::compareById);
         newRelated.sort(ContactData::compareById);
 
         Assertions.assertEquals(oldRelated, newRelated);
+    }
+
+    public List<Object> seekCoupleGroupAndContactWithoutLink() {
+        var lst = new ArrayList<Object>();
+        var lstGroups = app.hbm().getGroupList();
+        var lstContacts = app.hbm().getContactList();
+        if (lstGroups.isEmpty() || lstContacts.isEmpty()) return lst;
+
+        for (GroupData g : lstGroups) {
+            for (ContactData c : lstContacts) {
+                var oldRelated = app.hbm().getContactsInGroup(g);
+                if (!oldRelated.contains(c)) {
+                    lst.add(g);
+                    lst.add(c);
+                    return lst;
+                }
+            }
+        }
+        return lst;
     }
 
     @Test
