@@ -3,10 +3,13 @@ package manager;
 import model.ContactData;
 import model.GroupData;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ContactHelper extends HelperBase {
     public ContactHelper(ApplicationManager manager) {
@@ -192,6 +195,28 @@ public class ContactHelper extends HelperBase {
 
     public void clickButtomRemoveFrom() {
         click(By.cssSelector("input[name='remove']"));
+    }
+
+    public Map<String, String> getPhones() {
+        var dict = new HashMap<String, String>();
+        List<WebElement> rows = manager.driver.findElements(By.name("entry"));
+        for (WebElement row : rows) {
+            var id = row.findElement(By.tagName("input")).getAttribute("id");
+            var phones = row.findElements(By.tagName("td")).get(5).getText();
+            dict.put(id, phones);
+        }
+        return dict;
+    }
+
+    public Map<String, String> getEmails() {
+        var dict = new HashMap<String, String>();
+        List<WebElement> rows = manager.driver.findElements(By.name("entry"));
+        for (WebElement row : rows) {
+            var id = row.findElement(By.tagName("input")).getAttribute("id");
+            var emails = row.findElements(By.tagName("td")).get(4).getText();
+            dict.put(id, emails);
+        }
+        return dict;
     }
 
     public String getPhones(ContactData contact) {

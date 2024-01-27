@@ -4,10 +4,7 @@ package ru.kis.collections;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CollectionTests {
     @Test
@@ -36,6 +33,19 @@ public class CollectionTests {
 
         set.add( "d");
         Assertions.assertEquals(4, set.size());
+
+    }
+
+    @Test
+    void mapTest() {
+        var digit = new HashMap<Character,String>();
+        digit.put('0', "Zero");
+        digit.put('1', "One");
+        digit.put('2', "Two");
+        digit.put('3', "Three");
+        digit.put('4', "Fore");
+
+        Assertions.assertEquals("One", digit.get('1'));
 
     }
 
