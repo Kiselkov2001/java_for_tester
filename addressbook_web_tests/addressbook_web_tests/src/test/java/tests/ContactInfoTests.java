@@ -17,12 +17,12 @@ public class ContactInfoTests extends TestBase {
                     "", "", ""));
         }
         var contacts = app.hbm().getContactList();
+        var expected = contacts.stream().collect(Collectors.toMap(ContactData::id, contact ->
+                Stream.of(contact.home(), contact.mobile(), contact.work(), contact.secondary())
+                        .filter(s -> s != null && !s.isEmpty()).collect(Collectors.joining("\n"))
+        ));
         var phones = app.contacts().getPhones();
-        for (var contact : contacts) {
-            var expected = Stream.of(contact.home(), contact.mobile(), contact.work(), contact.secondary())
-                    .filter(s -> s != null && !s.isEmpty()).collect(Collectors.joining("\n"));
-            Assertions.assertEquals(expected, phones.get(contact.id()));
-        }
+        Assertions.assertEquals(expected, phones);
     }
 
     @Test
@@ -34,12 +34,12 @@ public class ContactInfoTests extends TestBase {
                     "aaaa", "bbbb", "cccc"));
         }
         var contacts = app.hbm().getContactList();
+        var expected = contacts.stream().collect(Collectors.toMap(ContactData::id, contact ->
+                Stream.of(contact.email(), contact.email2(), contact.email3())
+                        .filter(s -> s != null && !s.isEmpty()).collect(Collectors.joining("\n"))
+        ));
         var emails = app.contacts().getEmails();
-        for (var contact : contacts) {
-            var expected = Stream.of(contact.email(), contact.email2(), contact.email3())
-                    .filter(s -> s != null && !s.isEmpty()).collect(Collectors.joining("\n"));
-            Assertions.assertEquals(expected, emails.get(contact.id()));
-        }
+        Assertions.assertEquals(expected, emails);
     }
 
 }
