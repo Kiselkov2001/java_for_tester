@@ -117,7 +117,11 @@ public class ContactHelper extends HelperBase {
                 new String[]{"firstname", contact.firstname()},
                 new String[]{"address", contact.address()},
                 new String[]{"email", contact.email()},
+                new String[]{"email2", contact.email2()},
+                new String[]{"email3", contact.email3()},
                 new String[]{"home", contact.home()},
+                new String[]{"mobile", contact.mobile()},
+                new String[]{"work", contact.work()},
                 new String[]{"photo", contact.photo()},
         };
 
@@ -188,6 +192,18 @@ public class ContactHelper extends HelperBase {
 
     public void clickButtomRemoveFrom() {
         click(By.cssSelector("input[name='remove']"));
+    }
+
+    public String getPhones(ContactData contact) {
+        return manager.driver.findElement(By.xpath(String.format("//input[@id='%s']/../../td[6]", contact.id()))).getText();
+    }
+
+    public String getEmails(ContactData contact) {
+        return manager.driver.findElement(By.xpath(String.format("//input[@id='%s']/../../td[5]", contact.id()))).getText();
+    }
+
+    public String getAddress(ContactData contact) {
+        return manager.driver.findElement(By.xpath(String.format("//input[@id='%s']/../../td[4]", contact.id()))).getText();
     }
 
 }

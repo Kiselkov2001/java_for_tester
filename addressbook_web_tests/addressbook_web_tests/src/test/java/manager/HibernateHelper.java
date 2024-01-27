@@ -8,8 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HibernateHelper extends HelperBase {
     private SessionFactory sessionFactory;
@@ -26,11 +26,12 @@ public class HibernateHelper extends HelperBase {
     }
 
     static List<GroupData> convertListGroup(List<GroupRecord> records) {
-        List<GroupData> lst = new ArrayList<>();
-        for (var r : records) {
-            lst.add(convertGroup(r));
-        }
-        return lst;
+        return records.stream().map(HibernateHelper::convertGroup).collect(Collectors.toList());
+//        List<GroupData> lst = new ArrayList<>();
+//        for (var r : records) {
+//            lst.add(convertGroup(r));
+//        }
+//        return lst;
     }
 
     private static GroupData convertGroup(GroupRecord r) {
@@ -38,7 +39,8 @@ public class HibernateHelper extends HelperBase {
     }
 
     private static GroupRecord convertGroup(GroupData g) {
-        var id = g.id(); if ("".equals(id)) id = "0";
+        var id = g.id();
+        if ("".equals(id)) id = "0";
         return new GroupRecord(Integer.parseInt(id), g.name(), g.header(), g.footer());
     }
 
@@ -49,19 +51,23 @@ public class HibernateHelper extends HelperBase {
     }
 
     static List<ContactData> convertListContact(List<ContactRecord> records) {
-        List<ContactData> lst = new ArrayList<>();
-        for (var r : records) {
-            lst.add(convertContact(r));
-        }
-        return lst;
+        return records.stream().map(HibernateHelper::convertContact).collect(Collectors.toList());
+//        List<ContactData> lst = new ArrayList<>();
+//        for (var r : records) {
+//            lst.add(convertContact(r));
+//        }
+//        return lst;
     }
 
     private static ContactData convertContact(ContactRecord r) {
-        return new ContactData("" + r.id, r.firstname, r.lastname, "", r.address, "", "");
+        return new ContactData("" + r.id, r.firstname, r.lastname, "", r.address,
+                r.home, r.mobile, r.work, r.phone2,
+                r.email, r.email2, r.email3);
     }
 
     private static ContactRecord convertContact(ContactData c) {
-        var id = c.id(); if ("".equals(id)) id = "0";
+        var id = c.id();
+        if ("".equals(id)) id = "0";
         return new ContactRecord(Integer.parseInt(id), c.firstname(), c.lastname(), c.address());
     }
 

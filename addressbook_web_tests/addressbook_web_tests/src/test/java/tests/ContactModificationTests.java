@@ -14,7 +14,7 @@ public class ContactModificationTests extends TestBase {
     @Test
     public void canModifyContact() {
         if (app.hbm().getContactCount() == 0) {
-            app.hbm().createContact(new ContactData("", "lastname", "firstname", "", "", "", ""));
+            app.contacts().createContact(new ContactData("", "lastname", "firstname", "", "", "", "", "", "", "", "", ""));
         }
         var prvList = app.hbm().getContactList(); //app.contacts().getList(); //app.jdbc().getContactList();
         var rnd = new Random();
@@ -117,7 +117,7 @@ public class ContactModificationTests extends TestBase {
         ContactData contact = null;
 
         if (app.hbm().getContactCount() == 0) {
-            app.hbm().createContact(new ContactData("", "lastname", "firstname", "", "", "", ""));
+            app.hbm().createContact(new ContactData("", "lastname", "firstname", "", "", "", "", "", "", "", "", ""));
         }
 
         var oldRelated = app.hbm().getContactsInGroup(group);

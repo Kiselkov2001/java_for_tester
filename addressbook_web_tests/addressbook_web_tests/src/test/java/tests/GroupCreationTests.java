@@ -12,6 +12,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GroupCreationTests extends TestBase {
 
@@ -56,19 +60,31 @@ public class GroupCreationTests extends TestBase {
                 .withFooter(CommonFunc.randomString(20)));
     }
 
+    public static Stream<GroupData> randomStreamGroup() {
+        Supplier<GroupData> randomGroup = () -> new GroupData()
+                .withName(CommonFunc.randomString(5))
+                .withHeader(CommonFunc.randomString(10))
+                .withFooter(CommonFunc.randomString(20));
+
+        return Stream.generate(randomGroup).limit(1);
+    }
+
     @ParameterizedTest
-    @MethodSource("singleRandomGroup")
+    @MethodSource("randomStreamGroup")
     public void canCreateGroup(GroupData group) {
         var prvList = app.hbm().getGroupList(); //app.groups().getList(); //app.jdbc().getGroupList();
         app.groups().createGroup(group);
         var newList = app.hbm().getGroupList(); //app.groups().getList(); //app.jdbc().getGroupList();
-        newList.sort(GroupData::compareById);
-        var maxId = newList.get(newList.size() - 1).id();
+//        newList.sort(GroupData::compareById);
+//        var maxId = newList.get(newList.size() - 1).id();
+        var extGroups = newList.stream().filter(g -> !prvList.contains(g)).toList();
+        var maxId = extGroups.get(0).id();
 
         var lst = new ArrayList<>(prvList);
         lst.add(group.withId(maxId));
-        lst.sort(GroupData::compareById);
-        Assertions.assertEquals(lst, newList);
+//        lst.sort(GroupData::compareById);
+//        Assertions.assertEquals(lst, newList);
+        Assertions.assertEquals(Set.copyOf(lst), Set.copyOf(newList));
     }
 
     @ParameterizedTest

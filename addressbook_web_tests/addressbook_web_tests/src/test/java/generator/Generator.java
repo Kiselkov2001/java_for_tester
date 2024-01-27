@@ -14,6 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Generator {
     @Parameter(names = {"--type", "-t"})
@@ -48,30 +51,49 @@ public class Generator {
             throw new IllegalArgumentException("Unknown data type: " + type);
     }
 
+    private Object generateData(Supplier<Object> dataSupplier) {
+        return Stream.generate(dataSupplier).limit(count).collect(Collectors.toList());
+//        var lst = new ArrayList<Object>();
+//        for (int i = 0; i < count; i++) {
+//            lst.add(dataSupplier.get());
+//        }
+//        return lst;
+    }
+
     private Object generateContacts() {
-        var lst = new ArrayList<ContactData>();
-        var rnd = new Random();
-        for (int i = 0; i < count; i++) {
-            lst.add(new ContactData()
-                    .withFirstName(CommonFunc.randomString(rnd.nextInt(21)))
-                    .withLastName(CommonFunc.randomString(rnd.nextInt(21)))
-                    .withAddress(CommonFunc.randomString(rnd.nextInt(21)))
-                    .withEmail(CommonFunc.randomString(rnd.nextInt(21)))
-                    .withHome(CommonFunc.randomString(rnd.nextInt(21))));
-        }
-        return lst;
+        return generateData(() -> new ContactData()
+                        .withFirstName(CommonFunc.randomString(10))
+                        .withLastName(CommonFunc.randomString(15))
+                        .withAddress(CommonFunc.randomString(21)));
+
+//        var lst = new ArrayList<ContactData>();
+//        var rnd = new Random();
+//        for (int i = 0; i < count; i++) {
+//            lst.add(new ContactData()
+//                    .withFirstName(CommonFunc.randomString(rnd.nextInt(10)))
+//                    .withLastName(CommonFunc.randomString(rnd.nextInt(15)))
+//                    .withAddress(CommonFunc.randomString(rnd.nextInt(21)))
+//                    .withEmail(CommonFunc.randomString(rnd.nextInt(21)))
+//                    .withHome(CommonFunc.randomString(rnd.nextInt(21))));
+//        }
+//        return lst;
     }
 
     private Object generateGroups() {
-        var lst = new ArrayList<GroupData>();
-        var rnd = new Random();
-        for (int i = 0; i < count; i++) {
-            lst.add(new GroupData()
-                    .withName(CommonFunc.randomString(rnd.nextInt(21)))
-                    .withHeader(CommonFunc.randomString(rnd.nextInt(21)))
-                    .withFooter(CommonFunc.randomString(rnd.nextInt(21))));
-        }
-        return lst;
+        return generateData(() -> new GroupData()
+                .withName(CommonFunc.randomString(10))
+                .withHeader(CommonFunc.randomString(15))
+                .withFooter(CommonFunc.randomString(21)));
+
+//        var lst = new ArrayList<GroupData>();
+//        var rnd = new Random();
+//        for (int i = 0; i < count; i++) {
+//            lst.add(new GroupData()
+//                    .withName(CommonFunc.randomString(rnd.nextInt(21)))
+//                    .withHeader(CommonFunc.randomString(rnd.nextInt(21)))
+//                    .withFooter(CommonFunc.randomString(rnd.nextInt(21))));
+//        }
+//        return lst;
     }
 
     private void save(Object data) throws IOException {

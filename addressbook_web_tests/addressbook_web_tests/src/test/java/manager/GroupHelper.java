@@ -2,9 +2,11 @@ package manager;
 
 import model.GroupData;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GroupHelper extends HelperBase {
 
@@ -112,20 +114,28 @@ public class GroupHelper extends HelperBase {
     }
 
     private void selectAllGroups() {
-        openGroupsPage();
-        var lst = manager.driver.findElements(By.name("selected[]"));
-        for (var chk : lst) chk.click();
+        //openGroupsPage();
+        //var lst = manager.driver.findElements(By.name("selected[]"));
+        //for (var chk : lst) chk.click();
+        manager.driver
+                .findElements(By.name("selected[]"))
+                .forEach(WebElement::click);
     }
 
     public List<GroupData> getList() {
         openGroupsPage();
-        var groups = new ArrayList<GroupData>();
         var lst = manager.driver.findElements(By.cssSelector("span.group"));
-        for (var s : lst) {
+        return lst.stream().map(s ->{
             var name = s.getText();
             var id = s.findElement(By.name("selected[]")).getAttribute("value");
-            groups.add(new GroupData().withId(id).withName(name));
-        }
-        return groups;
+            return new GroupData().withId(id).withName(name);
+        }).collect(Collectors.toList());
+//        var groups = new ArrayList<GroupData>();
+//        for (var s : lst) {
+//            var name = s.getText();
+//            var id = s.findElement(By.name("selected[]")).getAttribute("value");
+//            groups.add(new GroupData().withId(id).withName(name));
+//        }
+//        return groups;
     }
 }
