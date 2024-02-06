@@ -13,6 +13,9 @@ public class ApplicationManager {
     private WebDriver driver;
     private String browser;
     private SessionHelper session;
+    private HttpSessionHelper http;
+    private MailHelper mail;
+    private JamesCliHelper JamesCli;
     private Properties properties;
 
     public void init(String browser, Properties properties) {
@@ -43,6 +46,31 @@ public class ApplicationManager {
             session = new SessionHelper(this);
         }
         return session;
+    }
+
+    public HttpSessionHelper http() {
+        if (http == null) {
+            http = new HttpSessionHelper(this);
+        }
+        return http;
+    }
+
+    public JamesCliHelper JamesCli() {
+        if (JamesCli == null) {
+            JamesCli = new JamesCliHelper(this);
+        }
+        return JamesCli;
+    }
+
+    public MailHelper mail() {
+        if (mail == null) {
+            mail = new MailHelper(this);
+        }
+        return mail;
+    }
+
+    public String property(String name) {
+        return properties.getProperty(name);
     }
 
     public boolean isElementPresent(By locater) {
