@@ -16,6 +16,8 @@ public class ApplicationManager {
     private HttpSessionHelper http;
     private MailHelper mail;
     private JamesCliHelper JamesCli;
+    private JamesApiHelper JamesApi;
+    DeveloperMailHelper developerMail;
     private Properties properties;
 
     public void init(String browser, Properties properties) {
@@ -62,11 +64,25 @@ public class ApplicationManager {
         return JamesCli;
     }
 
+    public JamesApiHelper JamesApi() {
+        if (JamesApi == null) {
+            JamesApi = new JamesApiHelper(this);
+        }
+        return JamesApi;
+    }
+
     public MailHelper mail() {
         if (mail == null) {
             mail = new MailHelper(this);
         }
         return mail;
+    }
+
+    public DeveloperMailHelper developerMail() {
+        if (developerMail == null) {
+            developerMail = new DeveloperMailHelper(this);
+        }
+        return developerMail;
     }
 
     public String property(String name) {
@@ -75,7 +91,7 @@ public class ApplicationManager {
 
     public boolean isElementPresent(By locater) {
         try {
-            driver.findElement(locater);
+            driver().findElement(locater);
             return true;
         } catch (NoSuchElementException e) {
             return false;

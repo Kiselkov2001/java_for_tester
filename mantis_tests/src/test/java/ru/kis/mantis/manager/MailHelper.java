@@ -1,6 +1,7 @@
 package ru.kis.mantis.manager;
 
 import jakarta.mail.*;
+import ru.kis.mantis.common.CommonFunc;
 import ru.kis.mantis.model.MailMessage;
 
 import java.io.IOException;
@@ -8,7 +9,6 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.regex.Pattern;
 
 public class MailHelper extends HelperBase {
     public MailHelper(ApplicationManager manager) {
@@ -60,7 +60,7 @@ public class MailHelper extends HelperBase {
         }
     }
 
-    public void drain(String email, String password) {
+    public void drain(String email, String password) { //it's possible delete messages around JamesAPI
         try {
             var inbox = getInbox(email, password);
             inbox.open(Folder.READ_WRITE);
@@ -81,13 +81,15 @@ public class MailHelper extends HelperBase {
 
     public String extractUrl(String email, String password) {
         var messages = receive(email, password, Duration.ofSeconds(10));
-        var text = messages.get(0).content();
-        var pattern = Pattern.compile("http://\\S*");
-        var matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            return text.substring(matcher.start(), matcher.end());
-        }
-        return null;
+        return CommonFunc.extractUrl(messages.get(0).content());
+
+//        var text = messages.get(0).content();
+//        var pattern = Pattern.compile("http://\\S*");
+//        var matcher = pattern.matcher(text);
+//        if (matcher.find()) {
+//            return text.substring(matcher.start(), matcher.end());
+//        }
+//        return null;
     }
 
 }

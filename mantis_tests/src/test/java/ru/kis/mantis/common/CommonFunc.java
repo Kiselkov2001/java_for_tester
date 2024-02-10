@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Random;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,6 +32,16 @@ public class CommonFunc {
                 .map(i -> 'a' + i)
                 .map(Character::toString)
                 .collect(Collectors.joining());
+    }
+
+    public static String extractUrl(String messageText) {
+        var text = messageText;
+        var pattern = Pattern.compile("http://\\S*");
+        var matcher = pattern.matcher(text);
+        if (matcher.find()) {
+            return text.substring(matcher.start(), matcher.end());
+        }
+        return null;
     }
 
 }

@@ -64,4 +64,16 @@ public class SessionHelper extends HelperBase {
                 (By.cssSelector("input[type='submit']")));
         elem.click();
     }
+
+    public void startCreation(String username, String email) {
+        if (!manager.session().isLoggedIn()) {
+            manager.session().login(manager.property("web.username"), manager.property("web.password"));
+        }
+        manager.driver().get(String.format("%s/manage_user_create_page.php", manager.property("web.baseURL")));
+        type(By.name("username"), username);
+        type(By.name("realname"), username);
+        type(By.name("email"), email);
+        click(By.cssSelector("input[type='submit']"));
+    }
+
 }
