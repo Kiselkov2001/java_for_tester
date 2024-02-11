@@ -18,7 +18,8 @@ public class ApplicationManager {
     private JamesCliHelper JamesCli;
     private JamesApiHelper JamesApi;
     DeveloperMailHelper developerMail;
-    private RestApiHelper restApi;
+    private SoapApiHelper restApi;
+    private RestApiHelper soapApi;
     private Properties properties;
 
     public void init(String browser, Properties properties) {
@@ -86,11 +87,18 @@ public class ApplicationManager {
         return developerMail;
     }
 
-    public RestApiHelper rest() {
+    public SoapApiHelper rest() {
         if (restApi == null) {
-            restApi = new RestApiHelper(this);
+            restApi = new SoapApiHelper(this);
         }
         return restApi;
+    }
+
+    public RestApiHelper soap() {
+        if (soapApi == null) {
+            soapApi = new RestApiHelper(this);
+        }
+        return soapApi;
     }
 
     public String property(String name) {
