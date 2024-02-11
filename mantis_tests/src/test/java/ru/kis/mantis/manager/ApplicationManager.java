@@ -18,6 +18,7 @@ public class ApplicationManager {
     private JamesCliHelper JamesCli;
     private JamesApiHelper JamesApi;
     DeveloperMailHelper developerMail;
+    private RestApiHelper restApi;
     private Properties properties;
 
     public void init(String browser, Properties properties) {
@@ -83,6 +84,13 @@ public class ApplicationManager {
             developerMail = new DeveloperMailHelper(this);
         }
         return developerMail;
+    }
+
+    public RestApiHelper rest() {
+        if (restApi == null) {
+            restApi = new RestApiHelper(this);
+        }
+        return restApi;
     }
 
     public String property(String name) {
