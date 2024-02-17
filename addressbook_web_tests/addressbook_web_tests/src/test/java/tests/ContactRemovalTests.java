@@ -16,7 +16,8 @@ public class ContactRemovalTests extends TestBase {
         var rnd = new Random();
         int index = rnd.nextInt(prvList.size());
 
-        app.contacts().removeContact(index);
+        //app.contacts().removeContact(index);
+        app.contacts().removeContact(prvList.get(index));
 
         var newList = app.jdbc().getContactList(); //app.contacts().getList();
         Assertions.assertEquals(prvList.size() - 1, newList.size());

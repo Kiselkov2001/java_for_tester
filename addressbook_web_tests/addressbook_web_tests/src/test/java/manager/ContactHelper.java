@@ -1,5 +1,6 @@
 package manager;
 
+import io.qameta.allure.Step;
 import model.ContactData;
 import model.GroupData;
 import org.openqa.selenium.By;
@@ -51,6 +52,12 @@ public class ContactHelper extends HelperBase {
 
     public void removeContact(int index) {
         selectContact(index);
+        removeSelectedContacts();
+    }
+
+    @Step
+    public void removeContact(ContactData contac) {
+        selectContact(contac);
         removeSelectedContacts();
     }
 
